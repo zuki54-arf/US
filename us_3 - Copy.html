@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Us.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   Us. — a private scrapbook
+   Tokens: warm paper background, rose primary,
+   wine accent, wax-seal + torn-paper signature.
+   ============================================ */
+
+:root{
+  --bg: #FFF8FA;
+  --primary: #E85D75;
+  --secondary: #F7B2C0;
+  --text: #29242A;
+  --card: #FFFFFF;
+  --accent: #8E4052;
+  --gold: #C9A227;
+  --shadow: 0 10px 30px rgba(142,64,82,0.12);
+  --shadow-sm: 0 4px 14px rgba(142,64,82,0.10);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --font-display: 'Playfair Display', serif;
+  --font-hand: 'Caveat', cursive;
+  --font-body: 'Inter', sans-serif;
+}
+
+[data-theme="dusk"]{
+  --bg: #221A22;
+  --primary: #E8899E;
+  --secondary: #4A2E38;
+  --text: #F5E9EC;
+  --card: #2E2229;
+  --accent: #F2C6A0;
+  --gold: #E3C368;
+  --shadow: 0 10px 30px rgba(0,0,0,0.4);
+  --shadow-sm: 0 4px 14px rgba(0,0,0,0.35);
+}
+
+[data-theme="bloom"]{
+  --bg: #F6F0FA;
+  --primary: #8B5FBF;
+  --secondary: #D9C2F0;
+  --text: #2E2333;
+  --card: #FFFFFF;
+  --accent: #5B3E75;
+  --gold: #B98CD6;
+  --shadow: 0 10px 30px rgba(91,62,117,0.14);
+  --shadow-sm: 0 4px 14px rgba(91,62,117,0.12);
+  --flower-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='%238B5FBF'%3E%3Cellipse cx='32' cy='16' rx='11' ry='15'/%3E%3Cellipse cx='32' cy='48' rx='11' ry='15'/%3E%3Cellipse cx='16' cy='32' rx='15' ry='11'/%3E%3Cellipse cx='48' cy='32' rx='15' ry='11'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='9' fill='%23B98CD6'/%3E%3C/svg%3E");
+}
+
+/* ---- Bloom theme: floral accents ---- */
+[data-theme="bloom"] .opener-heart{ color: var(--primary); }
+[data-theme="bloom"] .opener::before{
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  background-image:
+    var(--flower-svg),
+    var(--flower-svg);
+  background-repeat: no-repeat;
+  background-size: 90px 90px, 70px 70px;
+  background-position: -20px -20px, calc(100% + 20px) calc(100% + 20px);
+  opacity: 0.5;
+}
+[data-theme="bloom"] .home-photo-wrap::after{
+  content:'';
+  position:absolute; top:-14px; right:-14px; width:64px; height:64px;
+  background-image: var(--flower-svg);
+  background-repeat:no-repeat; background-size:contain;
+  filter: drop-shadow(0 4px 8px rgba(91,62,117,0.25));
+}
+[data-theme="bloom"] .setup-tape{ background: var(--secondary); }
+[data-theme="bloom"] .setup-card::after{
+  content:'';
+  position:absolute; bottom:-10px; left:-10px; width:44px; height:44px;
+  background-image: var(--flower-svg);
+  background-repeat:no-repeat; background-size:contain; opacity:0.9;
+}
+[data-theme="bloom"] .timeline-dot{
+  background-image: var(--flower-svg);
+  background-size: contain; background-repeat:no-repeat;
+  background-color: transparent; border:none; box-shadow:none;
+  width:20px; height:20px; left:-24px; top:0;
+}
+[data-theme="bloom"] .reason-card::before{
+  content:'';
+  display:inline-block; width:16px; height:16px; margin-right:6px;
+  background-image: var(--flower-svg); background-size:contain; background-repeat:no-repeat;
+  vertical-align:middle;
+}
+[data-theme="bloom"] .btn-start{ background: var(--primary); }
+[data-theme="bloom"] .cd-num{ background: var(--secondary); }
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+.hidden{ display:none !important; }
+
+button{
+  font-family: inherit;
+  border:none;
+  background:none;
+  cursor:pointer;
+  color: inherit;
+}
+
+input, select, textarea{
+  font-family: inherit;
+  font-size: 16px;
+  border:1px solid rgba(142,64,82,0.18);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: var(--card);
+  color: var(--text);
+  width:100%;
+}
+
+input:focus, select:focus, textarea:focus, button:focus-visible{
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ============ OPENER ============ */
+.opener{
+  position:fixed; inset:0;
+  background: radial-gradient(120% 120% at 50% 20%, var(--secondary) 0%, var(--bg) 60%);
+  display:flex; align-items:center; justify-content:center;
+  z-index: 300;
+  transition: opacity .5s ease, visibility .5s ease;
+}
+.opener.fade-out{ opacity:0; visibility:hidden; pointer-events:none; }
+.opener-inner{ text-align:center; }
+.opener-heart{
+  font-size: 46px; color: var(--primary);
+  animation: heartbeat 1.6s ease-in-out infinite;
+}
+.opener-word{
+  font-family: var(--font-display); font-weight:600; letter-spacing: 0.35em;
+  font-size: 13px; color: var(--accent); margin-top: 14px;
+}
+.opener-names{
+  font-family: var(--font-display); font-style:italic; font-size: 32px;
+  margin-top: 8px; color: var(--text);
+}
+.btn-start{
+  margin-top: 34px;
+  font-family: var(--font-hand); font-size: 22px;
+  background: var(--primary); color:#fff;
+  padding: 10px 34px; border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .2s ease;
+}
+.btn-start:active{ transform: scale(0.96); }
+
+@keyframes heartbeat{
+  0%,100%{ transform: scale(1); }
+  20%{ transform: scale(1.18); }
+  35%{ transform: scale(0.96); }
+  50%{ transform: scale(1.1); }
+}
+
+.opener-launch .opener-heart{ animation: heartExpand 1s ease forwards; }
+@keyframes heartExpand{
+  0%{ transform: scale(1); }
+  60%{ transform: scale(2.6); opacity:1; }
+  100%{ transform: scale(3.2); opacity:0; }
+}
+
+/* ============ SETUP ============ */
+.setup{
+  position:fixed; inset:0; z-index:250;
+  background: var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  padding: 24px;
+}
+.setup-card{
+  position:relative;
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 32px 26px;
+  max-width: 400px; width:100%;
+}
+.setup-tape{
+  position:absolute; top:-14px; left:50%; transform: translateX(-50%) rotate(-3deg);
+  width: 90px; height: 26px; background: var(--secondary);
+  opacity: 0.85; border-radius: 3px;
+}
+.setup-card h1{
+  font-family: var(--font-display); font-size: 26px; margin-bottom:6px;
+}
+.setup-sub{ color: var(--accent); font-size: 14px; margin-bottom: 22px; }
+.setup-card label{
+  display:block; font-size: 13px; color: var(--accent); font-weight:600;
+  margin-bottom: 14px;
+}
+.setup-card input{ margin-top: 6px; }
+.btn-primary{
+  margin-top: 6px; width:100%;
+  background: var(--primary); color:#fff; font-weight:600;
+  padding: 14px; border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: transform .15s ease;
+}
+.btn-primary:active{ transform: scale(0.98); }
+
+/* ============ APP SHELL ============ */
+.app{
+  max-width: 480px; margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 90px;
+  position:relative;
+}
+
+.page{ padding: 28px 20px 20px; animation: fadeUp .35s ease; }
+@keyframes fadeUp{
+  from{ opacity:0; transform: translateY(10px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+.page-header{
+  display:flex; align-items:center; gap:10px; margin-bottom: 18px;
+}
+.page-header h2{
+  font-family: var(--font-display); font-size: 24px; flex:1;
+}
+.btn-back{ font-size: 26px; color: var(--accent); line-height:1; }
+.btn-icon{
+  width:36px; height:36px; border-radius:50%;
+  background: var(--secondary); color: var(--accent);
+  font-size: 20px; display:flex; align-items:center; justify-content:center;
+}
+
+/* ============ HOME ============ */
+.home-photo-wrap{
+  position:relative; width:100%; aspect-ratio: 4/3;
+  border-radius: var(--radius); overflow:hidden;
+  box-shadow: var(--shadow); margin-bottom: 18px;
+}
+.home-photo{
+  width:100%; height:100%;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  background-size: cover; background-position:center;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-family: var(--font-hand); font-size: 20px;
+}
+.photo-edit-btn{
+  position:absolute; bottom:10px; right:10px;
+  width:34px; height:34px; border-radius:50%;
+  background: rgba(255,255,255,0.85); color: var(--accent);
+  font-size:15px;
+}
+.home-names{
+  font-family: var(--font-display); font-size: 28px; text-align:center;
+  margin-bottom: 4px;
+}
+.heart-sep{ color: var(--primary); font-size: 20px; }
+.home-together-label{
+  text-align:center; color: var(--accent); font-size:13px; letter-spacing:0.08em;
+  text-transform: uppercase; margin-top: 14px;
+}
+.home-together-count{
+  text-align:center; font-family: var(--font-display); font-size: 40px; margin-top:2px;
+}
+.home-together-breakdown{
+  text-align:center; color: var(--accent); font-size: 14px; margin-top:4px; margin-bottom: 22px;
+}
+
+.home-countdown-card{
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); padding: 18px; text-align:center;
+  margin-bottom: 22px;
+}
+.eyebrow{
+  font-size: 12px; letter-spacing:0.1em; text-transform:uppercase; color: var(--accent);
+  margin-bottom: 10px; font-weight:600;
+}
+.countdown-row{ display:flex; justify-content:center; gap: 14px; }
+.cd-unit{ display:flex; flex-direction:column; align-items:center; min-width: 52px; }
+.cd-num{
+  font-family: var(--font-display); font-size: 26px; font-variant-numeric: tabular-nums;
+  background: var(--secondary); border-radius: 10px; padding: 6px 10px; width:100%;
+}
+.cd-label{ font-size: 10px; text-transform:uppercase; color: var(--accent); margin-top:4px; letter-spacing:0.06em; }
+
+.home-actions{ display:flex; gap: 12px; }
+.btn-secondary{
+  flex:1; background: var(--card); color: var(--accent);
+  border: 1.5px solid var(--secondary); font-weight:600;
+  padding: 13px; border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: transform .15s ease;
+}
+.btn-secondary:active{ transform: scale(0.97); }
+
+/* ============ STORY / TIMELINE ============ */
+.timeline{ position:relative; padding-left: 22px; }
+.timeline::before{
+  content:''; position:absolute; left:6px; top:6px; bottom:6px; width:2px;
+  background: var(--secondary);
+}
+.timeline-item{ position:relative; margin-bottom: 26px; }
+.timeline-dot{
+  position:absolute; left:-22px; top:4px; width:14px; height:14px;
+  border-radius:50%; background: var(--primary); border:3px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--secondary);
+}
+.timeline-date{
+  font-size: 12px; color: var(--accent); font-weight:700; text-transform:uppercase;
+  letter-spacing: 0.06em; margin-bottom: 2px;
+}
+.timeline-title{ font-family: var(--font-display); font-size: 19px; margin-bottom: 6px; }
+.timeline-desc{ font-size: 14px; line-height:1.5; color: var(--text); opacity:0.85; }
+.timeline-photo{
+  margin-top: 10px; border-radius: 14px; width:100%; aspect-ratio: 16/10;
+  background-size: cover; background-position:center; background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+.timeline-empty, .empty-state{
+  text-align:center; padding: 40px 10px; color: var(--accent); font-family: var(--font-hand);
+  font-size: 20px;
+}
+
+/* ============ MEMORIES ============ */
+.chip-row{ display:flex; gap:8px; overflow-x:auto; margin-bottom: 16px; padding-bottom:4px; }
+.chip{
+  flex-shrink:0; padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight:600;
+  background: var(--card); color: var(--accent); border: 1.5px solid var(--secondary);
+}
+.chip.active{ background: var(--primary); color:#fff; border-color: var(--primary); }
+
+.memory-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+.memory-card{
+  position:relative; border-radius: 14px; overflow:hidden; aspect-ratio: 1/1;
+  background: var(--secondary); background-size:cover; background-position:center;
+  box-shadow: var(--shadow-sm);
+  transform: rotate(var(--tilt,0deg));
+}
+.memory-card::after{
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(to top, rgba(41,36,42,0.55), transparent 45%);
+}
+.memory-card-label{
+  position:absolute; left:8px; bottom:8px; right:8px; z-index:1;
+  color:#fff; font-size: 12px; font-weight:600;
+}
+
+/* ============ MODAL ============ */
+.modal-overlay{
+  position:fixed; inset:0; background: rgba(41,36,42,0.55);
+  display:flex; align-items:flex-end; justify-content:center; z-index: 400;
+}
+.modal-content{
+  background: var(--card); width:100%; max-width: 480px;
+  border-radius: 22px 22px 0 0; padding: 22px 20px 28px;
+  max-height: 88vh; overflow-y:auto;
+  animation: slideUp .28s ease;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+}
+@keyframes slideUp{ from{ transform: translateY(30px); opacity:0; } to{ transform: translateY(0); opacity:1; } }
+.modal-photo{
+  width:100%; aspect-ratio: 4/3; border-radius: 14px; background-size:cover;
+  background-position:center; background-color: var(--secondary); margin-bottom: 14px;
+}
+.modal-title{ font-family: var(--font-display); font-size: 20px; margin-bottom: 4px; }
+.modal-date{ font-size: 13px; color: var(--accent); margin-bottom: 10px; font-weight:600; }
+.modal-desc{ font-size: 14px; line-height:1.55; margin-bottom: 18px; }
+.modal-form label{
+  display:block; font-size: 13px; color: var(--accent); font-weight:600; margin-bottom: 14px;
+}
+.modal-form input, .modal-form select, .modal-form textarea{ margin-top:6px; }
+.modal-form textarea{ resize: vertical; min-height: 80px; font-family: inherit; }
+.modal-row{ display:flex; gap:10px; }
+.modal-row > *{ flex:1; }
+.modal-actions{ display:flex; gap:10px; margin-top: 6px; }
+.btn-danger{
+  flex:1; background: none; color: var(--primary); font-weight:600;
+  padding: 13px; border-radius: var(--radius-sm); border: 1.5px solid var(--primary);
+}
+.upload-btn{
+  display:block; text-align:center; padding: 12px; border-radius: var(--radius-sm);
+  border: 1.5px dashed var(--secondary); color: var(--accent); font-size:13px; font-weight:600;
+  margin-top:6px; cursor:pointer;
+}
+
+/* ============ MORE ============ */
+.more-list{ display:flex; flex-direction:column; gap: 10px; }
+.more-item{
+  display:flex; align-items:center; gap: 14px;
+  background: var(--card); border-radius: var(--radius-sm);
+  padding: 16px; font-size: 15px; font-weight:600; box-shadow: var(--shadow-sm);
+  text-align:left;
+}
+.more-icon{ font-size: 18px; width:22px; text-align:center; color: var(--primary); }
+
+/* ============ LETTERS ============ */
+.envelope-list{ display:flex; flex-direction:column; gap: 12px; }
+.envelope{
+  display:flex; align-items:center; gap:12px;
+  background: var(--card); border-radius: var(--radius-sm); padding: 16px 18px;
+  box-shadow: var(--shadow-sm); font-weight:600; font-size:15px; text-align:left;
+}
+.envelope-icon{ font-size:20px; color: var(--primary); }
+
+.letter-reveal{ text-align:center; padding: 10px 4px; }
+.letter-seal{ font-size: 40px; color: var(--gold); margin-bottom: 10px; animation: sealPop .4s ease; }
+@keyframes sealPop{ from{ transform: scale(0.5); opacity:0; } to{ transform: scale(1); opacity:1; } }
+.letter-body{
+  font-family: var(--font-hand); font-size: 22px; line-height: 1.5; text-align:left;
+  white-space: pre-wrap; margin: 14px 0;
+}
+.letter-sign{ text-align:right; font-family: var(--font-hand); font-size: 22px; }
+
+/* ============ REASONS ============ */
+.reason-stage{ text-align:center; padding-top: 20px; }
+.reason-count{ color: var(--accent); font-weight:700; font-size: 12px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom: 16px; }
+.reason-card{
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 46px 26px; min-height: 220px;
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display); font-size: 22px; line-height:1.4;
+  margin-bottom: 22px; transform: rotate(-1deg);
+  cursor: pointer;
+}
+
+/* ============ PLAYLIST ============ */
+.song-list{ display:flex; flex-direction:column; gap: 12px; }
+.song-card{
+  background: var(--card); border-radius: var(--radius-sm); padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.song-title{ font-weight:700; font-size:15px; }
+.song-artist{ color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+.song-why{ font-family: var(--font-hand); font-size: 18px; color: var(--text); margin-bottom: 10px; }
+.song-link{ color: var(--primary); font-weight:600; font-size: 13px; }
+.player-row{ display:flex; align-items:center; gap: 10px; margin-top: 4px; }
+.player-btn{
+  width:38px; height:38px; border-radius:50%;
+  background: var(--secondary); color: var(--accent);
+  font-size: 15px; display:flex; align-items:center; justify-content:center;
+  transition: transform .15s ease;
+}
+.player-btn:active{ transform: scale(0.92); }
+
+/* ============ QUIZ ============ */
+.quiz-progress{ font-size: 12px; color: var(--accent); font-weight:700; text-transform:uppercase; margin-bottom: 14px; }
+.quiz-question{ font-family: var(--font-display); font-size: 21px; margin-bottom: 18px; }
+.quiz-option{
+  display:block; width:100%; text-align:left; background: var(--card);
+  border: 1.5px solid var(--secondary); border-radius: var(--radius-sm);
+  padding: 14px 16px; margin-bottom: 10px; font-size:14px; font-weight:600;
+}
+.quiz-option.correct{ border-color: var(--primary); background: var(--secondary); }
+.quiz-option.wrong{ border-color: var(--accent); opacity: 0.6; }
+.quiz-score{ text-align:center; padding-top: 30px; }
+.quiz-score-num{ font-family: var(--font-display); font-size: 44px; }
+.quiz-score-msg{ font-family: var(--font-hand); font-size: 22px; margin: 14px 0 22px; color: var(--accent); }
+
+/* ============ SECRET ============ */
+.secret-area{ text-align:center; padding-top: 60px; }
+.secret-lock{ font-size: 50px; margin-bottom: 18px; }
+.secret-msg{ font-family: var(--font-hand); font-size: 22px; color: var(--accent); line-height:1.5; }
+.secret-unlocked-body{ font-family: var(--font-hand); font-size: 22px; line-height:1.5; text-align:left; margin-top: 20px; white-space: pre-wrap; }
+
+/* ============ COUNTDOWN FULL ============ */
+.countdown-full{ text-align:center; padding-top: 20px; }
+.cf-units{ display:flex; justify-content:center; gap: 14px; margin: 30px 0; }
+.cf-unit{ display:flex; flex-direction:column; align-items:center; }
+.cf-num{
+  font-family: var(--font-display); font-size: 40px; font-variant-numeric: tabular-nums;
+  background: var(--card); box-shadow: var(--shadow-sm); border-radius: 14px;
+  padding: 14px 16px; min-width: 66px;
+}
+.cf-label{ font-size: 11px; text-transform:uppercase; letter-spacing:0.08em; color: var(--accent); margin-top:6px; }
+.cf-date{ color: var(--accent); font-weight:600; margin-bottom: 6px; }
+.cf-heart{ font-size: 30px; color: var(--primary); }
+.cf-arrived{ padding-top: 40px; }
+.cf-arrived h2{ font-family: var(--font-display); font-size: 26px; margin-bottom: 10px; }
+
+/* ============ SETTINGS ============ */
+.settings-block{ margin-bottom: 22px; }
+.settings-block h3{ font-family: var(--font-display); font-size: 17px; margin-bottom: 12px; }
+.settings-block label{ display:block; font-size: 13px; color: var(--accent); font-weight:600; margin-bottom: 12px; }
+.settings-block input, .settings-block select{ margin-top:6px; }
+.settings-hint{ font-size: 13px; color: var(--text); opacity:0.7; line-height:1.5; }
+.theme-row{ display:flex; align-items:center; justify-content:space-between; }
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{
+  position:fixed; bottom:0; left:50%; transform: translateX(-50%);
+  width:100%; max-width: 480px;
+  background: var(--card); box-shadow: 0 -4px 20px rgba(142,64,82,0.12);
+  display:flex; padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+.nav-btn{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-size: 11px; font-weight:600; color: var(--accent); opacity:0.55; padding: 4px;
+}
+.nav-btn.active{ opacity:1; color: var(--primary); }
+.nav-icon{ font-size: 18px; }
+
+/* Utility */
+.text-center{ text-align:center; }
+
+</style>
+</head>
+<body>
+
+<!-- ============ OPENER ============ -->
+<section id="opener" class="opener">
+  <div class="opener-inner">
+    <div class="opener-heart">❤</div>
+    <div class="opener-word">OUR STORY</div>
+    <div class="opener-names" id="openerNames">Ralph &amp; Partner</div>
+    <button id="startBtn" class="btn-start">Begin</button>
+  </div>
+</section>
+
+<!-- ============ FIRST-RUN SETUP ============ -->
+<section id="setup" class="setup hidden">
+  <div class="setup-card">
+    <div class="setup-tape"></div>
+    <h1>Let's set the scene</h1>
+    <p class="setup-sub">A couple of details and "Us." is ready.</p>
+    <label>Your name
+      <input type="text" id="setupNameA" placeholder="Ralph" />
+    </label>
+    <label>Their name
+      <input type="text" id="setupNameB" placeholder="Partner" />
+    </label>
+    <label>The day it started
+      <input type="date" id="setupDate" />
+    </label>
+    <button id="setupSaveBtn" class="btn-primary">Save &amp; continue</button>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app" class="app hidden">
+
+  <!-- ---------- HOME ---------- -->
+  <main id="page-home" class="page">
+    <div class="home-photo-wrap">
+      <div class="home-photo" id="homePhoto"></div>
+      <button class="photo-edit-btn" data-edit-photo="cover" title="Change photo">✎</button>
+    </div>
+
+    <h1 class="home-names"><span id="nameA">Ralph</span> <span class="heart-sep">❤</span> <span id="nameB">Partner</span></h1>
+
+    <p class="home-together-label">Together for</p>
+    <div class="home-together-count" id="homeTogether">0 days</div>
+    <div class="home-together-breakdown" id="homeBreakdown">0 years · 0 months · 0 days</div>
+
+    <div class="home-countdown-card">
+      <p class="eyebrow">Our next anniversary</p>
+      <div class="countdown-row" id="homeCountdown">
+        <div class="cd-unit"><span class="cd-num">00</span><span class="cd-label">days</span></div>
+        <div class="cd-unit"><span class="cd-num">00</span><span class="cd-label">hrs</span></div>
+        <div class="cd-unit"><span class="cd-num">00</span><span class="cd-label">min</span></div>
+        <div class="cd-unit"><span class="cd-num">00</span><span class="cd-label">sec</span></div>
+      </div>
+    </div>
+
+    <div class="home-actions">
+      <button class="btn-secondary" data-nav="story">Our Story</button>
+      <button class="btn-secondary" id="todaysMemoryBtn">Today's Memory</button>
+    </div>
+  </main>
+
+  <!-- ---------- STORY ---------- -->
+  <main id="page-story" class="page hidden">
+    <header class="page-header">
+      <h2>Our Story</h2>
+      <button class="btn-icon" id="addTimelineBtn" title="Add moment">+</button>
+    </header>
+    <div class="timeline" id="timelineList"></div>
+  </main>
+
+  <!-- ---------- MEMORIES ---------- -->
+  <main id="page-memories" class="page hidden">
+    <header class="page-header">
+      <h2>Memories</h2>
+      <button class="btn-icon" id="addMemoryBtn" title="Add memory">+</button>
+    </header>
+    <div class="chip-row" id="categoryChips"></div>
+    <div class="memory-grid" id="memoryGrid"></div>
+  </main>
+
+  <!-- ---------- MORE ---------- -->
+  <main id="page-more" class="page hidden">
+    <header class="page-header"><h2>More</h2></header>
+    <div class="more-list">
+      <button class="more-item" data-nav="letters"><span class="more-icon">✉</span> Love Letters</button>
+      <button class="more-item" data-nav="reasons"><span class="more-icon">❤</span> Reasons I Love You</button>
+      <button class="more-item" data-nav="playlist"><span class="more-icon">♫</span> Our Playlist</button>
+      <button class="more-item" data-nav="quiz"><span class="more-icon">?</span> Couple Quiz</button>
+      <button class="more-item" data-nav="secret"><span class="more-icon">🔒</span> Secret</button>
+      <button class="more-item" data-nav="countdown"><span class="more-icon">⏱</span> Countdown</button>
+      <button class="more-item" data-nav="settings"><span class="more-icon">⚙</span> Settings</button>
+    </div>
+  </main>
+
+  <!-- ---------- LOVE LETTERS ---------- -->
+  <main id="page-letters" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Love Letters</h2>
+      <button class="btn-icon" id="addLetterBtn" title="Add letter">+</button>
+    </header>
+    <div class="envelope-list" id="envelopeList"></div>
+  </main>
+
+  <!-- ---------- REASONS ---------- -->
+  <main id="page-reasons" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Reasons I Love You</h2>
+      <button class="btn-icon" id="addReasonBtn" title="Add reason">+</button>
+    </header>
+    <div class="reason-stage">
+      <p class="reason-count" id="reasonCount">Reason #01</p>
+      <div class="reason-card" id="reasonCard">You make ordinary days feel special.</div>
+      <button class="btn-primary" id="reasonNextBtn">Next reason →</button>
+    </div>
+  </main>
+
+  <!-- ---------- PLAYLIST ---------- -->
+  <main id="page-playlist" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Our Playlist</h2>
+      <button class="btn-icon" id="addSongBtn" title="Add song">+</button>
+    </header>
+    <div class="song-list" id="songList"></div>
+  </main>
+
+  <!-- ---------- QUIZ ---------- -->
+  <main id="page-quiz" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Couple Quiz</h2></header>
+    <div id="quizArea"></div>
+  </main>
+
+  <!-- ---------- SECRET ---------- -->
+  <main id="page-secret" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Secret</h2>
+      <button class="btn-icon" id="addSecretBtn" title="Add something">+</button>
+    </header>
+    <div id="secretArea" class="secret-area"></div>
+  </main>
+
+  <!-- ---------- COUNTDOWN (full page) ---------- -->
+  <main id="page-countdown" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Our Next Anniversary</h2></header>
+    <div id="countdownFull" class="countdown-full"></div>
+  </main>
+
+  <!-- ---------- SETTINGS ---------- -->
+  <main id="page-settings" class="page hidden">
+    <header class="page-header"><button class="btn-back" data-nav="more">‹</button><h2>Settings</h2></header>
+
+    <section class="settings-block">
+      <h3>Profile</h3>
+      <label>Your name <input type="text" id="settingsNameA"></label>
+      <label>Their name <input type="text" id="settingsNameB"></label>
+    </section>
+
+    <section class="settings-block">
+      <h3>Relationship</h3>
+      <label>Anniversary date <input type="date" id="settingsDate"></label>
+    </section>
+
+    <section class="settings-block">
+      <h3>Content</h3>
+      <p class="settings-hint">Manage what you've added. Tap an item on its page (Story, Memories, Letters, Reasons, Playlist) to edit or delete it there.</p>
+      <div class="modal-actions" style="margin-top:12px;">
+        <button class="btn-secondary" id="editQuizBtn">Edit quiz questions</button>
+      </div>
+    </section>
+
+    <section class="settings-block">
+      <h3>Secret message</h3>
+      <label>Shown on your anniversary
+        <textarea id="settingsSecretMessage" rows="4"></textarea>
+      </label>
+    </section>
+
+    <section class="settings-block">
+      <h3>Backup &amp; Sharing</h3>
+      <p class="settings-hint">This app saves everything only on this device's browser. To let someone else see it on their own phone or computer, export a backup here and send them the file — they'll import it after opening the app on their device.</p>
+      <div class="modal-actions" style="margin-top:12px;">
+        <button class="btn-secondary" id="exportBtn">Export backup</button>
+        <button class="btn-secondary" id="importBtn">Import backup</button>
+      </div>
+      <input type="file" id="importFileInput" accept="application/json" class="hidden" />
+    </section>
+
+    <section class="settings-block">
+      <h3>App</h3>
+      <label class="theme-row">Theme
+        <select id="settingsTheme">
+          <option value="blush">Blush</option>
+          <option value="dusk">Dusk</option>
+          <option value="bloom">Bloom (Purple &amp; Floral)</option>
+        </select>
+      </label>
+    </section>
+
+    <button class="btn-primary" id="settingsSaveBtn">Save changes</button>
+  </main>
+
+  <!-- ---------- BOTTOM NAV ---------- -->
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-nav="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button class="nav-btn" data-nav="story"><span class="nav-icon">✦</span><span>Story</span></button>
+    <button class="nav-btn" data-nav="memories"><span class="nav-icon">▦</span><span>Memories</span></button>
+    <button class="nav-btn" data-nav="more"><span class="nav-icon">☰</span><span>More</span></button>
+  </nav>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div id="modalOverlay" class="modal-overlay hidden">
+  <div id="modalContent" class="modal-content"></div>
+</div>
+
+<input type="file" id="hiddenFileInput" accept="image/*" class="hidden" />
+
+<script>
+/* =========================================================
+   Us. — app.js
+   Single-file SPA logic. State lives in localStorage under
+   'us_app_state'. No frameworks, no build step.
+   ========================================================= */
+
+const STORAGE_KEY = 'us_app_state';
+
+const DEFAULT_STATE = {
+  nameA: '', nameB: '', anniversaryDate: '', theme: 'blush', coverPhoto: '',
+  timeline: [],
+  memories: [],
+  letters: [
+    { id: id(), title: 'Open when you miss me', body: 'Write something here for the days apart.' },
+    { id: id(), title: "Open when you're sad", body: 'Write a little comfort for the hard days.' },
+    { id: id(), title: 'Open on our anniversary', body: 'Save a message for that one day a year.' },
+  ],
+  reasons: [
+    { id: id(), text: 'You make ordinary days feel special.' },
+    { id: id(), text: 'You remember the little things.' },
+    { id: id(), text: 'You laugh at my terrible jokes.' },
+  ],
+  songs: [],
+  quiz: [
+    { q: 'Where did we first meet?', options: ['Add your own answers in Settings'], correct: 0 }
+  ],
+  secretMessage: "I made this entire app because I wanted somewhere to keep our memories.\n\nHappy Anniversary.",
+  secretItems: [],
+  quizScore: null,
+};
+
+function id(){ return Math.random().toString(36).slice(2, 10); }
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return structuredClone(DEFAULT_STATE);
+    return { ...structuredClone(DEFAULT_STATE), ...JSON.parse(raw) };
+  }catch(e){
+    console.error('Failed to load state', e);
+    return structuredClone(DEFAULT_STATE);
+  }
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){
+    console.error('Failed to save state (storage may be full)', e);
+    alert("Couldn't save — your browser storage may be full. Try smaller photos.");
+  }
+}
+
+let state = loadState();
+let currentPage = 'home';
+let currentReasonIndex = 0;
+let quizIndex = 0;
+let quizCorrectCount = 0;
+
+/* ---------------- DOM refs ---------------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+/* ============================================================
+   OPENER + SETUP
+   ============================================================ */
+function initOpener(){
+  const hasProfile = state.nameA && state.nameB && state.anniversaryDate;
+  $('#openerNames').textContent = hasProfile ? `${state.nameA} & ${state.nameB}` : 'Ralph & Partner';
+
+  $('#startBtn').addEventListener('click', () => {
+    const opener = $('#opener');
+    opener.classList.add('opener-launch');
+    setTimeout(() => {
+      opener.classList.add('fade-out');
+      setTimeout(() => {
+        opener.classList.add('hidden');
+        if(hasProfile){
+          enterApp();
+        }else{
+          $('#setup').classList.remove('hidden');
+        }
+      }, 500);
+    }, 900);
+  });
+}
+
+function initSetup(){
+  $('#setupSaveBtn').addEventListener('click', () => {
+    const a = $('#setupNameA').value.trim();
+    const b = $('#setupNameB').value.trim();
+    const d = $('#setupDate').value;
+    if(!a || !b || !d){
+      alert('Fill in both names and the date to continue.');
+      return;
+    }
+    state.nameA = a; state.nameB = b; state.anniversaryDate = d;
+    saveState();
+    $('#setup').classList.add('hidden');
+    enterApp();
+  });
+}
+
+function enterApp(){
+  $('#app').classList.remove('hidden');
+  applyTheme();
+  renderAll();
+  navigate('home');
+  startTickers();
+}
+
+function applyTheme(){
+  const t = state.theme === 'dusk' || state.theme === 'bloom' ? state.theme : 'blush';
+  if(t === 'blush') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function navigate(pageName){
+  currentPage = pageName;
+  $$('.page').forEach(p => p.classList.add('hidden'));
+  const target = $(`#page-${pageName}`);
+  if(target) target.classList.remove('hidden');
+
+  $$('.nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.nav === pageName);
+  });
+
+  if(pageName === 'reasons') renderReason();
+  if(pageName === 'quiz') renderQuiz();
+  if(pageName === 'secret') renderSecret();
+  if(pageName === 'countdown') renderCountdownFull();
+  if(pageName === 'settings') fillSettingsForm();
+}
+
+document.addEventListener('click', (e) => {
+  const navTarget = e.target.closest('[data-nav]');
+  if(navTarget){
+    navigate(navTarget.dataset.nav);
+  }
+});
+
+/* ============================================================
+   TIME HELPERS
+   ============================================================ */
+function daysBetween(d1, d2){
+  const ms = d2.setHours(0,0,0,0) - d1.setHours(0,0,0,0);
+  return Math.floor(ms / 86400000);
+}
+
+function yearsMonthsDays(startStr){
+  const start = new Date(startStr + 'T00:00:00');
+  const now = new Date();
+  let years = now.getFullYear() - start.getFullYear();
+  let months = now.getMonth() - start.getMonth();
+  let days = now.getDate() - start.getDate();
+  if(days < 0){
+    months -= 1;
+    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if(months < 0){ years -= 1; months += 12; }
+  const totalDays = daysBetween(new Date(startStr + 'T00:00:00'), new Date());
+  return { years, months, days, totalDays };
+}
+
+function nextAnniversary(startStr){
+  const start = new Date(startStr + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  let next = new Date(today.getFullYear(), start.getMonth(), start.getDate());
+  // Keep today as the anniversary so the countdown can show "arrived" all day.
+  if(next.getTime() < today.getTime()){
+    next = new Date(today.getFullYear() + 1, start.getMonth(), start.getDate());
+  }
+  return next;
+}
+
+function formatCountdownParts(target){
+  const now = new Date();
+  let diff = target - now;
+  if(diff < 0) diff = 0;
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+  return { days, hours, mins, secs, arrived: diff <= 0 };
+}
+
+function pad(n){ return String(n).padStart(2, '0'); }
+
+/* ============================================================
+   HOME
+   ============================================================ */
+function renderHome(){
+  $('#nameA').textContent = state.nameA || 'Ralph';
+  $('#nameB').textContent = state.nameB || 'Partner';
+
+  if(state.coverPhoto){
+    $('#homePhoto').style.backgroundImage = `url(${state.coverPhoto})`;
+    $('#homePhoto').textContent = '';
+  }else{
+    $('#homePhoto').style.backgroundImage = '';
+    $('#homePhoto').textContent = 'Add your photo';
+  }
+
+  if(!state.anniversaryDate) return;
+  const ymd = yearsMonthsDays(state.anniversaryDate);
+  $('#homeTogether').textContent = `${ymd.totalDays.toLocaleString()} day${ymd.totalDays === 1 ? '' : 's'}`;
+  $('#homeBreakdown').textContent = `${ymd.years} year${ymd.years===1?'':'s'} · ${ymd.months} month${ymd.months===1?'':'s'} · ${ymd.days} day${ymd.days===1?'':'s'}`;
+
+  updateHomeCountdown();
+}
+
+function updateHomeCountdown(){
+  if(!state.anniversaryDate) return;
+  const target = nextAnniversary(state.anniversaryDate);
+  const p = formatCountdownParts(target);
+  const row = $('#homeCountdown');
+  const nums = row.querySelectorAll('.cd-num');
+  nums[0].textContent = pad(p.days);
+  nums[1].textContent = pad(p.hours);
+  nums[2].textContent = pad(p.mins);
+  nums[3].textContent = pad(p.secs);
+}
+
+function renderCountdownFull(){
+  const el = $('#countdownFull');
+  if(!state.anniversaryDate){ el.innerHTML = '<p class="empty-state">Set your anniversary date in Settings first.</p>'; return; }
+  const target = nextAnniversary(state.anniversaryDate);
+  const p = formatCountdownParts(target);
+  if(p.arrived){
+    el.innerHTML = `
+      <div class="cf-arrived">
+        <div class="cf-heart">❤</div>
+        <h2>Happy Anniversary</h2>
+        <p class="settings-hint">Another year together.</p>
+        <button class="btn-primary" data-nav="secret" style="margin-top:22px;">Open Your Surprise</button>
+      </div>`;
+    return;
+  }
+  el.innerHTML = `
+    <p class="cf-date">${target.toLocaleDateString(undefined, {year:'numeric', month:'long', day:'numeric'})}</p>
+    <div class="cf-units" id="cfUnits">
+      <div class="cf-unit"><span class="cf-num">${pad(p.days)}</span><span class="cf-label">days</span></div>
+      <div class="cf-unit"><span class="cf-num">${pad(p.hours)}</span><span class="cf-label">hours</span></div>
+      <div class="cf-unit"><span class="cf-num">${pad(p.mins)}</span><span class="cf-label">minutes</span></div>
+      <div class="cf-unit"><span class="cf-num">${pad(p.secs)}</span><span class="cf-label">seconds</span></div>
+    </div>
+    <div class="cf-heart">❤</div>`;
+}
+
+function updateCountdownFullTick(){
+  if(currentPage !== 'countdown' || !state.anniversaryDate) return;
+  const target = nextAnniversary(state.anniversaryDate);
+  const p = formatCountdownParts(target);
+  if(p.arrived){ renderCountdownFull(); return; }
+  const units = $('#cfUnits');
+  if(!units) return;
+  const nums = units.querySelectorAll('.cf-num');
+  nums[0].textContent = pad(p.days);
+  nums[1].textContent = pad(p.hours);
+  nums[2].textContent = pad(p.mins);
+  nums[3].textContent = pad(p.secs);
+}
+
+$('#todaysMemoryBtn').addEventListener('click', () => {
+  if(state.memories.length === 0){
+    openModal(`<p class="empty-state">No memories saved yet. Add one on the Memories tab.</p>`);
+    return;
+  }
+  const m = state.memories[Math.floor(Math.random() * state.memories.length)];
+  showMemoryModal(m);
+});
+
+/* ============================================================
+   PHOTO UPLOAD (generic)
+   ============================================================ */
+let pendingPhotoCallback = null;
+$('#hiddenFileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file || !pendingPhotoCallback) return;
+  const reader = new FileReader();
+  reader.onload = () => { pendingPhotoCallback(reader.result); pendingPhotoCallback = null; };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+function pickPhoto(callback){
+  pendingPhotoCallback = callback;
+  $('#hiddenFileInput').click();
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-edit-photo]');
+  if(btn && btn.dataset.editPhoto === 'cover'){
+    pickPhoto((dataUrl) => { state.coverPhoto = dataUrl; saveState(); renderHome(); });
+  }
+});
+
+/* ============================================================
+   STORY / TIMELINE
+   ============================================================ */
+function renderTimeline(){
+  const list = $('#timelineList');
+  if(state.timeline.length === 0){
+    list.innerHTML = '<p class="timeline-empty">Your story starts here. Tap + to add the first moment.</p>';
+    return;
+  }
+  const sorted = [...state.timeline].sort((a,b) => a.date.localeCompare(b.date));
+  list.innerHTML = sorted.map(item => `
+    <div class="timeline-item" data-id="${item.id}">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">${formatDate(item.date)}</div>
+      <div class="timeline-title">${escapeHtml(item.title)}</div>
+      ${item.description ? `<div class="timeline-desc">${escapeHtml(item.description)}</div>` : ''}
+      ${item.photo ? `<div class="timeline-photo" style="background-image:url(${item.photo})"></div>` : ''}
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.timeline-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const item = state.timeline.find(t => t.id === el.dataset.id);
+      openTimelineForm(item);
+    });
+  });
+}
+
+function formatDate(str){
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString(undefined, {year:'numeric', month:'long', day:'numeric'});
+}
+
+function escapeHtml(str=''){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+$('#addTimelineBtn').addEventListener('click', () => openTimelineForm());
+
+function openTimelineForm(item){
+  const isEdit = !!item;
+  let photoData = item?.photo || '';
+  const html = `
+    <h3 class="modal-title">${isEdit ? 'Edit Moment' : 'Add a Moment'}</h3>
+    <div class="modal-form">
+      <label>Date <input type="date" id="fDate" value="${item?.date || ''}"></label>
+      <label>Title <input type="text" id="fTitle" placeholder="The Beginning" value="${item ? escapeAttr(item.title) : ''}"></label>
+      <label>Description <textarea id="fDesc" placeholder="Tell the story...">${item ? escapeHtml(item.description || '') : ''}</textarea></label>
+      <div class="upload-btn" id="fPhotoBtn">${photoData ? 'Change photo' : 'Add a photo (optional)'}</div>
+      <div class="modal-actions">
+        ${isEdit ? '<button class="btn-danger" id="fDelete">Delete</button>' : ''}
+        <button class="btn-primary" id="fSave">Save</button>
+      </div>
+    </div>`;
+  openModal(html);
+
+  $('#fPhotoBtn').addEventListener('click', () => {
+    pickPhoto((dataUrl) => { photoData = dataUrl; $('#fPhotoBtn').textContent = 'Photo added ✓'; });
+  });
+
+  $('#fSave').addEventListener('click', () => {
+    const date = $('#fDate').value;
+    const title = $('#fTitle').value.trim();
+    if(!date || !title){ alert('Add a date and title.'); return; }
+    const description = $('#fDesc').value.trim();
+    if(isEdit){
+      Object.assign(item, { date, title, description, photo: photoData });
+    }else{
+      state.timeline.push({ id: id(), date, title, description, photo: photoData });
+    }
+    saveState(); closeModal(); renderTimeline();
+  });
+
+  if(isEdit){
+    $('#fDelete').addEventListener('click', () => {
+      if(!confirm('Delete this moment?')) return;
+      state.timeline = state.timeline.filter(t => t.id !== item.id);
+      saveState(); closeModal(); renderTimeline();
+    });
+  }
+}
+
+function escapeAttr(str=''){ return str.replace(/"/g, '&quot;'); }
+
+/* ============================================================
+   MEMORIES
+   ============================================================ */
+const CATEGORIES = ['All', 'Dates', 'Trips', 'Funny', 'Anniversaries', 'Random'];
+let activeCategory = 'All';
+
+function renderCategoryChips(){
+  const row = $('#categoryChips');
+  row.innerHTML = CATEGORIES.map(c => `<button class="chip ${c===activeCategory?'active':''}" data-cat="${c}">${c}</button>`).join('');
+  row.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => { activeCategory = chip.dataset.cat; renderCategoryChips(); renderMemories(); });
+  });
+}
+
+function renderMemories(){
+  const grid = $('#memoryGrid');
+  const list = activeCategory === 'All' ? state.memories : state.memories.filter(m => m.category === activeCategory);
+  if(list.length === 0){
+    grid.innerHTML = '<p class="empty-state" style="grid-column:1/-1;">No memories here yet.</p>';
+    return;
+  }
+  grid.innerHTML = list.map((m, i) => `
+    <div class="memory-card" data-id="${m.id}" style="background-image:url(${m.photo || ''}); --tilt:${(i % 2 === 0 ? -2 : 2)}deg;">
+      <div class="memory-card-label">${escapeHtml(m.title)}</div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.memory-card').forEach(el => {
+    el.addEventListener('click', () => {
+      const m = state.memories.find(x => x.id === el.dataset.id);
+      showMemoryModal(m);
+    });
+  });
+}
+
+function showMemoryModal(m){
+  const html = `
+    ${m.photo ? `<div class="modal-photo" style="background-image:url(${m.photo})"></div>` : ''}
+    <div class="modal-title">${escapeHtml(m.title)}</div>
+    <div class="modal-date">${m.date ? formatDate(m.date) : ''}${m.category ? ' · ' + m.category : ''}</div>
+    <div class="modal-desc">${escapeHtml(m.description || '')}</div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="mDelete">Delete</button>
+      <button class="btn-primary" id="mEdit">Edit</button>
+    </div>`;
+  openModal(html);
+  $('#mDelete').addEventListener('click', () => {
+    if(!confirm('Delete this memory?')) return;
+    state.memories = state.memories.filter(x => x.id !== m.id);
+    saveState(); closeModal(); renderMemories();
+  });
+  $('#mEdit').addEventListener('click', () => { closeModal(); openMemoryForm(m); });
+}
+
+$('#addMemoryBtn').addEventListener('click', () => openMemoryForm());
+
+function openMemoryForm(item){
+  const isEdit = !!item;
+  let photoData = item?.photo || '';
+  const catOptions = CATEGORIES.filter(c => c !== 'All')
+    .map(c => `<option value="${c}" ${item?.category===c?'selected':''}>${c}</option>`).join('');
+  const html = `
+    <h3 class="modal-title">${isEdit ? 'Edit Memory' : 'Add a Memory'}</h3>
+    <div class="modal-form">
+      <label>Title <input type="text" id="fTitle" placeholder="Our favorite day" value="${item?escapeAttr(item.title):''}"></label>
+      <div class="modal-row">
+        <label>Date <input type="date" id="fDate" value="${item?.date || ''}"></label>
+        <label>Category <select id="fCat">${catOptions}</select></label>
+      </div>
+      <label>Note <textarea id="fDesc" placeholder="One of my favorite memories with you.">${item ? escapeHtml(item.description || '') : ''}</textarea></label>
+      <div class="upload-btn" id="fPhotoBtn">${photoData ? 'Change photo' : 'Add a photo'}</div>
+      <div class="modal-actions">
+        ${isEdit ? '<button class="btn-danger" id="fDelete">Delete</button>' : ''}
+        <button class="btn-primary" id="fSave">Save</button>
+      </div>
+    </div>`;
+  openModal(html);
+
+  $('#fPhotoBtn').addEventListener('click', () => {
+    pickPhoto((dataUrl) => { photoData = dataUrl; $('#fPhotoBtn').textContent = 'Photo added ✓'; });
+  });
+
+  $('#fSave').addEventListener('click', () => {
+    const title = $('#fTitle').value.trim();
+    if(!title){ alert('Give it a title.'); return; }
+    const date = $('#fDate').value;
+    const category = $('#fCat').value;
+    const description = $('#fDesc').value.trim();
+    if(isEdit){
+      Object.assign(item, { title, date, category, description, photo: photoData });
+    }else{
+      state.memories.push({ id: id(), title, date, category, description, photo: photoData });
+    }
+    saveState(); closeModal(); renderMemories();
+  });
+
+  if(isEdit){
+    $('#fDelete').addEventListener('click', () => {
+      if(!confirm('Delete this memory?')) return;
+      state.memories = state.memories.filter(x => x.id !== item.id);
+      saveState(); closeModal(); renderMemories();
+    });
+  }
+}
+
+/* ============================================================
+   LOVE LETTERS
+   ============================================================ */
+function renderLetters(){
+  const list = $('#envelopeList');
+  if(state.letters.length === 0){
+    list.innerHTML = '<p class="empty-state">No letters yet. Tap + to write one.</p>';
+    return;
+  }
+  list.innerHTML = state.letters.map(l => `
+    <button class="envelope" data-id="${l.id}"><span class="envelope-icon">✉</span> ${escapeHtml(l.title)}</button>
+  `).join('');
+  list.querySelectorAll('.envelope').forEach(el => {
+    el.addEventListener('click', () => {
+      const l = state.letters.find(x => x.id === el.dataset.id);
+      openLetterReveal(l);
+    });
+  });
+}
+
+function openLetterReveal(l){
+  const html = `
+    <div class="letter-reveal">
+      <div class="letter-seal">✉</div>
+      <div class="letter-body">${escapeHtml(l.body)}</div>
+      <div class="letter-sign">Love,<br>${escapeHtml(state.nameA || 'Me')}</div>
+      <div class="modal-actions" style="margin-top:20px;">
+        <button class="btn-danger" id="lDelete">Delete</button>
+        <button class="btn-primary" id="lEdit">Edit</button>
+      </div>
+    </div>`;
+  openModal(html);
+  $('#lDelete').addEventListener('click', () => {
+    if(!confirm('Delete this letter?')) return;
+    state.letters = state.letters.filter(x => x.id !== l.id);
+    saveState(); closeModal(); renderLetters();
+  });
+  $('#lEdit').addEventListener('click', () => { closeModal(); openLetterForm(l); });
+}
+
+$('#addLetterBtn').addEventListener('click', () => openLetterForm());
+
+function openLetterForm(item){
+  const isEdit = !!item;
+  const html = `
+    <h3 class="modal-title">${isEdit ? 'Edit Letter' : 'Write a Letter'}</h3>
+    <div class="modal-form">
+      <label>Envelope label <input type="text" id="fTitle" placeholder="Open when you miss me" value="${item?escapeAttr(item.title):''}"></label>
+      <label>Message <textarea id="fBody" placeholder="Dear you...">${item ? escapeHtml(item.body || '') : ''}</textarea></label>
+      <div class="modal-actions">
+        ${isEdit ? '<button class="btn-danger" id="fDelete">Delete</button>' : ''}
+        <button class="btn-primary" id="fSave">Save</button>
+      </div>
+    </div>`;
+  openModal(html);
+  $('#fSave').addEventListener('click', () => {
+    const title = $('#fTitle').value.trim();
+    const body = $('#fBody').value.trim();
+    if(!title || !body){ alert('Add a label and a message.'); return; }
+    if(isEdit){ Object.assign(item, { title, body }); }
+    else{ state.letters.push({ id: id(), title, body }); }
+    saveState(); closeModal(); renderLetters();
+  });
+  if(isEdit){
+    $('#fDelete').addEventListener('click', () => {
+      if(!confirm('Delete this letter?')) return;
+      state.letters = state.letters.filter(x => x.id !== item.id);
+      saveState(); closeModal(); renderLetters();
+    });
+  }
+}
+
+/* ============================================================
+   REASONS I LOVE YOU
+   ============================================================ */
+function renderReason(){
+  if(state.reasons.length === 0){
+    $('#reasonCount').textContent = '';
+    $('#reasonCard').textContent = 'Add your first reason with the + button.';
+    return;
+  }
+  if(currentReasonIndex >= state.reasons.length) currentReasonIndex = 0;
+  $('#reasonCount').textContent = `Reason #${pad(currentReasonIndex + 1)} of ${state.reasons.length}`;
+  $('#reasonCard').textContent = state.reasons[currentReasonIndex].text;
+}
+
+$('#reasonNextBtn').addEventListener('click', () => {
+  if(state.reasons.length === 0) return;
+  currentReasonIndex = (currentReasonIndex + 1) % state.reasons.length;
+  renderReason();
+});
+
+$('#reasonCard').addEventListener('click', () => {
+  if(state.reasons.length === 0) return;
+  openReasonForm(state.reasons[currentReasonIndex]);
+});
+
+$('#addReasonBtn').addEventListener('click', () => openReasonForm());
+
+function openReasonForm(item){
+  const isEdit = !!item;
+  const html = `
+    <h3 class="modal-title">${isEdit ? 'Edit Reason' : 'Add a Reason'}</h3>
+    <div class="modal-form">
+      <label>Reason <textarea id="fText" placeholder="You make ordinary days feel special.">${isEdit ? escapeHtml(item.text || '') : ''}</textarea></label>
+      <div class="modal-actions">
+        ${isEdit ? '<button class="btn-danger" id="fDelete">Delete</button>' : ''}
+        <button class="btn-primary" id="fSave">Save</button>
+      </div>
+    </div>`;
+  openModal(html);
+  $('#fSave').addEventListener('click', () => {
+    const text = $('#fText').value.trim();
+    if(!text) return;
+    if(isEdit){ item.text = text; }
+    else{
+      state.reasons.push({ id: id(), text });
+      currentReasonIndex = state.reasons.length - 1;
+    }
+    saveState(); closeModal(); renderReason();
+  });
+  if(isEdit){
+    $('#fDelete').addEventListener('click', () => {
+      if(!confirm('Delete this reason?')) return;
+      state.reasons = state.reasons.filter(r => r.id !== item.id);
+      if(currentReasonIndex >= state.reasons.length) currentReasonIndex = 0;
+      saveState(); closeModal(); renderReason();
+    });
+  }
+}
+
+/* ============================================================
+   PLAYLIST (with real audio playback — play/pause/skip)
+   ============================================================ */
+let audioEl = null;
+let currentSongId = null;
+
+function renderSongs(){
+  const list = $('#songList');
+  if(state.songs.length === 0){
+    list.innerHTML = '<p class="empty-state">No songs yet. Tap + to add one.</p>';
+    return;
+  }
+  list.innerHTML = state.songs.map(s => `
+    <div class="song-card" data-id="${s.id}">
+      <div class="song-title">♫ ${escapeHtml(s.title)}</div>
+      <div class="song-artist">${escapeHtml(s.artist)}</div>
+      ${s.why ? `<div class="song-why">"${escapeHtml(s.why)}"</div>` : ''}
+      <div class="player-row">
+        ${s.audio ? `
+          <button class="player-btn" data-prev="${s.id}">⏮</button>
+          <button class="player-btn" data-play="${s.id}">${currentSongId === s.id && audioEl && !audioEl.paused ? '⏸' : '▶'}</button>
+          <button class="player-btn" data-next="${s.id}">⏭</button>
+        ` : (s.link ? `<a class="song-link" href="${escapeAttr(s.link)}" target="_blank" rel="noopener">Listen ↗</a>` : '<span class="settings-hint">No audio attached</span>')}
+      </div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('[data-play]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); togglePlay(btn.dataset.play); }));
+  list.querySelectorAll('[data-next]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); skipSong(1); }));
+  list.querySelectorAll('[data-prev]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); skipSong(-1); }));
+  list.querySelectorAll('.song-card').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if(e.target.closest('.player-btn') || e.target.tagName === 'A') return;
+      const s = state.songs.find(x => x.id === el.dataset.id);
+      openSongForm(s);
+    });
+  });
+}
+
+function togglePlay(songId){
+  const song = state.songs.find(s => s.id === songId);
+  if(!song || !song.audio) return;
+  if(currentSongId === songId && audioEl){
+    audioEl.paused ? audioEl.play() : audioEl.pause();
+  }else{
+    if(audioEl) audioEl.pause();
+    audioEl = new Audio(song.audio);
+    currentSongId = songId;
+    audioEl.play();
+    audioEl.addEventListener('ended', () => skipSong(1));
+    audioEl.addEventListener('pause', renderSongs);
+    audioEl.addEventListener('play', renderSongs);
+  }
+  renderSongs();
+}
+
+function skipSong(direction){
+  const withAudio = state.songs.filter(s => s.audio);
+  if(withAudio.length === 0) return;
+  const idx = withAudio.findIndex(s => s.id === currentSongId);
+  const nextIdx = idx === -1 ? 0 : (idx + direction + withAudio.length) % withAudio.length;
+  const song = withAudio[nextIdx];
+  if(audioEl) audioEl.pause();
+  audioEl = new Audio(song.audio);
+  currentSongId = song.id;
+  audioEl.play();
+  audioEl.addEventListener('ended', () => skipSong(1));
+  audioEl.addEventListener('pause', renderSongs);
+  audioEl.addEventListener('play', renderSongs);
+  renderSongs();
+}
+
+$('#addSongBtn').addEventListener('click', () => openSongForm());
+
+function openSongForm(item){
+  const isEdit = !!item;
+  let audioData = item?.audio || '';
+  const html = `
+    <h3 class="modal-title">${isEdit ? 'Edit Song' : 'Add a Song'}</h3>
+    <div class="modal-form">
+      <label>Song <input type="text" id="fTitle" value="${item?escapeAttr(item.title):''}"></label>
+      <label>Artist <input type="text" id="fArtist" value="${item?escapeAttr(item.artist):''}"></label>
+      <label>Why this song matters <textarea id="fWhy">${item ? escapeHtml(item.why || '') : ''}</textarea></label>
+      <div class="upload-btn" id="fAudioBtn">${audioData ? 'Change audio file' : 'Add an audio file (optional)'}</div>
+      <label>Link instead (Spotify, Apple Music, etc.) <input type="url" id="fLink" placeholder="https://..." value="${item?escapeAttr(item.link||''):''}"></label>
+      <div class="modal-actions">
+        ${isEdit ? '<button class="btn-danger" id="fDelete">Delete</button>' : ''}
+        <button class="btn-primary" id="fSave">Save</button>
+      </div>
+    </div>`;
+  openModal(html);
+
+  $('#fAudioBtn').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'audio/*';
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if(!file) return;
+      if(file.size > 8 * 1024 * 1024) alert('That file is large — it may not save. A shorter clip works better.');
+      const reader = new FileReader();
+      reader.onload = () => { audioData = reader.result; $('#fAudioBtn').textContent = 'Audio added ✓'; };
+      reader.readAsDataURL(file);
+    });
+    input.click();
+  });
+
+  $('#fSave').addEventListener('click', () => {
+    const title = $('#fTitle').value.trim();
+    const artist = $('#fArtist').value.trim();
+    if(!title || !artist){ alert('Add a song and artist.'); return; }
+    const why = $('#fWhy').value.trim();
+    const link = $('#fLink').value.trim();
+    if(isEdit){ Object.assign(item, { title, artist, why, link, audio: audioData }); }
+    else{ state.songs.push({ id: id(), title, artist, why, link, audio: audioData }); }
+    saveState(); closeModal(); renderSongs();
+  });
+  if(isEdit){
+    $('#fDelete').addEventListener('click', () => {
+      if(!confirm('Remove this song?')) return;
+      if(currentSongId === item.id && audioEl){ audioEl.pause(); audioEl = null; currentSongId = null; }
+      state.songs = state.songs.filter(x => x.id !== item.id);
+      saveState(); closeModal(); renderSongs();
+    });
+  }
+}
+
+/* ============================================================
+   QUIZ
+   ============================================================ */
+function renderQuiz(){
+  quizIndex = 0; quizCorrectCount = 0;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const area = $('#quizArea');
+  if(state.quiz.length === 0){
+    area.innerHTML = '<p class="empty-state">No questions yet. Add some under Settings → Edit quiz questions.</p>';
+    return;
+  }
+  if(quizIndex >= state.quiz.length){
+    const pct = Math.round((quizCorrectCount / state.quiz.length) * 100);
+    let msg = 'Not bad — plenty more to learn about each other!';
+    if(pct === 100) msg = 'Perfect score. You really do know us.';
+    else if(pct >= 70) msg = 'You know us pretty well.';
+    area.innerHTML = `
+      <div class="quiz-score">
+        <p class="eyebrow" style="text-align:center;">Your score</p>
+        <div class="quiz-score-num">${quizCorrectCount} / ${state.quiz.length}</div>
+        <p class="quiz-score-msg">${msg}</p>
+        <button class="btn-primary" id="quizRetry">Try again</button>
+      </div>`;
+    $('#quizRetry').addEventListener('click', renderQuiz);
+    return;
+  }
+  const q = state.quiz[quizIndex];
+  area.innerHTML = `
+    <p class="quiz-progress">Question ${quizIndex + 1} / ${state.quiz.length}</p>
+    <p class="quiz-question">${escapeHtml(q.q)}</p>
+    ${q.options.map((opt, i) => `<button class="quiz-option" data-i="${i}">${escapeHtml(opt)}</button>`).join('')}
+  `;
+  area.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = Number(btn.dataset.i);
+      area.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+      if(i === q.correct){ btn.classList.add('correct'); quizCorrectCount++; }
+      else{
+        btn.classList.add('wrong');
+        const correctBtn = area.querySelector(`[data-i="${q.correct}"]`);
+        if(correctBtn) correctBtn.classList.add('correct');
+      }
+      setTimeout(() => { quizIndex++; renderQuizQuestion(); }, 900);
+    });
+  });
+}
+
+/* ============================================================
+   SECRET
+   ============================================================ */
+function renderSecret(){
+  const area = $('#secretArea');
+  const isAnniversaryToday = state.anniversaryDate && (() => {
+    const start = new Date(state.anniversaryDate + 'T00:00:00');
+    const now = new Date();
+    return start.getMonth() === now.getMonth() && start.getDate() === now.getDate();
+  })();
+
+  if(!isAnniversaryToday){
+    area.innerHTML = `
+      <div class="secret-lock">🔒</div>
+      <p class="secret-msg">Something is waiting here.<br>Come back on our anniversary.</p>`;
+    return;
+  }
+
+  const items = state.secretItems || [];
+  area.innerHTML = `
+    <div class="secret-lock">🔓</div>
+    <p class="secret-msg">You found it.</p>
+    <div class="secret-unlocked-body">${escapeHtml(state.secretMessage)}</div>
+    <div class="song-list" style="margin-top:20px;">
+      ${items.length === 0 ? '<p class="empty-state">Tap + to add a photo or note.</p>' :
+        items.map(it => `
+          <div class="song-card" data-id="${it.id}">
+            ${it.photo ? `<div class="modal-photo" style="background-image:url(${it.photo}); margin-bottom:10px;"></div>` : ''}
+            ${it.title ? `<div class="song-title">${escapeHtml(it.title)}</div>` : ''}
+            ${it.text ? `<div class="song-why">${escapeHtml(it.text)}</div>` : ''}
+          </div>`).join('')}
+    </div>`;
+
+  area.querySelectorAll('.song-card').forEach(el => {
+    el.addEventListener('click', () => {
+      const it = (state.secretItems || []).find(x => x.id === el.dataset.id);
+      if(!it || !confirm('Remove this item?')) return;
+      state.secretItems = state.secretItems.filter(x => x.id !== it.id);
+      saveState(); renderSecret();
+    });
+  });
+}
+
+$('#addSecretBtn').addEventListener('click', () => {
+  let photoData = '';
+  const html = `
+    <h3 class="modal-title">Add to Secret</h3>
+    <div class="modal-form">
+      <label>Title (optional) <input type="text" id="fTitle"></label>
+      <label>Note (optional) <textarea id="fText"></textarea></label>
+      <div class="upload-btn" id="fPhotoBtn">Add a photo (optional)</div>
+      <div class="modal-actions"><button class="btn-primary" id="fSave">Save</button></div>
+    </div>`;
+  openModal(html);
+  $('#fPhotoBtn').addEventListener('click', () => {
+    pickPhoto((dataUrl) => { photoData = dataUrl; $('#fPhotoBtn').textContent = 'Photo added ✓'; });
+  });
+  $('#fSave').addEventListener('click', () => {
+    const title = $('#fTitle').value.trim();
+    const text = $('#fText').value.trim();
+    if(!title && !text && !photoData){ alert('Add a title, note, or photo.'); return; }
+    if(!state.secretItems) state.secretItems = [];
+    state.secretItems.push({ id: id(), title, text, photo: photoData });
+    saveState(); closeModal(); renderSecret();
+  });
+});
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function fillSettingsForm(){
+  $('#settingsNameA').value = state.nameA;
+  $('#settingsNameB').value = state.nameB;
+  $('#settingsDate').value = state.anniversaryDate;
+  $('#settingsTheme').value = state.theme === 'dusk' || state.theme === 'bloom' ? state.theme : 'blush';
+  $('#settingsSecretMessage').value = state.secretMessage || '';
+}
+
+$('#settingsSaveBtn').addEventListener('click', () => {
+  const a = $('#settingsNameA').value.trim();
+  const b = $('#settingsNameB').value.trim();
+  const d = $('#settingsDate').value;
+  if(!a || !b || !d){ alert('Names and date are required.'); return; }
+  state.nameA = a; state.nameB = b; state.anniversaryDate = d;
+  state.theme = $('#settingsTheme').value;
+  state.secretMessage = $('#settingsSecretMessage').value;
+  saveState();
+  applyTheme();
+  renderAll();
+  alert('Saved.');
+});
+
+$('#editQuizBtn').addEventListener('click', openQuizManager);
+
+function openQuizManager(){
+  const list = (state.quiz || []).map((q, i) => `
+    <button class="envelope" data-qi="${i}" type="button">
+      <span class="envelope-icon">?</span> ${escapeHtml(q.q || 'Untitled question')}
+    </button>`).join('');
+  const html = `
+    <h3 class="modal-title">Quiz questions</h3>
+    <div class="envelope-list" id="quizManageList">
+      ${list || '<p class="empty-state">No questions yet.</p>'}
+    </div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn-primary" id="quizAddBtn">Add question</button>
+    </div>`;
+  openModal(html);
+  $$('#quizManageList [data-qi]').forEach(btn => {
+    btn.addEventListener('click', () => openQuizQuestionForm(Number(btn.dataset.qi)));
+  });
+  $('#quizAddBtn').addEventListener('click', () => openQuizQuestionForm());
+}
+
+function openQuizQuestionForm(index){
+  const isEdit = Number.isInteger(index) && state.quiz[index];
+  const item = isEdit ? state.quiz[index] : { q: '', options: ['', '', '', ''], correct: 0 };
+  const opts = [...item.options];
+  while(opts.length < 4) opts.push('');
+  const html = `
+    <h3 class="modal-title">${isEdit ? 'Edit question' : 'Add question'}</h3>
+    <div class="modal-form">
+      <label>Question <input type="text" id="fQ" value="${escapeAttr(item.q)}"></label>
+      <label>Option 1 <input type="text" id="fO0" value="${escapeAttr(opts[0])}"></label>
+      <label>Option 2 <input type="text" id="fO1" value="${escapeAttr(opts[1])}"></label>
+      <label>Option 3 <input type="text" id="fO2" value="${escapeAttr(opts[2])}"></label>
+      <label>Option 4 <input type="text" id="fO3" value="${escapeAttr(opts[3])}"></label>
+      <label>Correct answer
+        <select id="fCorrect">
+          <option value="0" ${item.correct===0?'selected':''}>Option 1</option>
+          <option value="1" ${item.correct===1?'selected':''}>Option 2</option>
+          <option value="2" ${item.correct===2?'selected':''}>Option 3</option>
+          <option value="3" ${item.correct===3?'selected':''}>Option 4</option>
+        </select>
+      </label>
+      <div class="modal-actions">
+        ${isEdit ? '<button class="btn-danger" id="fDelete">Delete</button>' : ''}
+        <button class="btn-primary" id="fSave">Save</button>
+      </div>
+    </div>`;
+  openModal(html);
+  $('#fSave').addEventListener('click', () => {
+    const q = $('#fQ').value.trim();
+    const options = [0,1,2,3].map(i => $(`#fO${i}`).value.trim()).filter(Boolean);
+    const correct = Number($('#fCorrect').value);
+    if(!q || options.length < 2){ alert('Add a question and at least two options.'); return; }
+    const safeCorrect = Math.min(correct, options.length - 1);
+    const entry = { q, options, correct: safeCorrect };
+    if(isEdit) state.quiz[index] = entry;
+    else state.quiz.push(entry);
+    saveState();
+    openQuizManager();
+  });
+  if(isEdit){
+    $('#fDelete').addEventListener('click', () => {
+      if(!confirm('Delete this question?')) return;
+      state.quiz.splice(index, 1);
+      saveState();
+      openQuizManager();
+    });
+  }
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(html){
+  $('#modalContent').innerHTML = html;
+  $('#modalOverlay').classList.remove('hidden');
+}
+function closeModal(){
+  $('#modalOverlay').classList.add('hidden');
+  $('#modalContent').innerHTML = '';
+}
+$('#modalOverlay').addEventListener('click', (e) => {
+  if(e.target === $('#modalOverlay')) closeModal();
+});
+
+/* ============================================================
+   TICKERS
+   ============================================================ */
+function startTickers(){
+  setInterval(() => {
+    if(currentPage === 'home') updateHomeCountdown();
+    if(currentPage === 'countdown') updateCountdownFullTick();
+  }, 1000);
+}
+
+/* ============================================================
+   RENDER ALL
+   ============================================================ */
+function renderAll(){
+  renderHome();
+  renderTimeline();
+  renderCategoryChips();
+  renderMemories();
+  renderLetters();
+  renderSongs();
+}
+
+/* ============================================================
+   BACKUP / EXPORT / IMPORT
+   ============================================================ */
+function exportBackup(){
+  const dataStr = JSON.stringify(state, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const datePart = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `us-backup-${datePart}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const incoming = JSON.parse(reader.result);
+      if(!incoming || typeof incoming !== 'object'){ throw new Error('bad format'); }
+      const overwrite = confirm(
+        "Import this backup?\n\nOK = replace everything currently on this device with the backup.\nCancel = don't import."
+      );
+      if(!overwrite) return;
+      state = { ...structuredClone(DEFAULT_STATE), ...incoming };
+      saveState();
+      applyTheme();
+      renderAll();
+      alert('Backup imported.');
+      navigate('home');
+    }catch(e){
+      console.error(e);
+      alert("That file doesn't look like a valid Us. backup.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+$('#exportBtn').addEventListener('click', exportBackup);
+$('#importBtn').addEventListener('click', () => $('#importFileInput').click());
+$('#importFileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(file) importBackup(file);
+  e.target.value = '';
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+applyTheme();
+initOpener();
+initSetup();
+
+</script>
+</body>
+</html>
